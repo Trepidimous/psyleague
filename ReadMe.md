@@ -55,22 +55,22 @@ if __name__ == '__main__':
     with open(log_file, 'r') as f:
         json_log = json.load(f)
     os.remove(log_file)
-    p_scores = [int(json_log['scores'][str(i)]) for i in range(n_players)]
-    rv = {}
-    rv['ranks'] = [sum([int(p_score < p2_score) for p2_score in p_scores]) for p_score in p_scores] # assumes higher score is better
-    rv['errors'] = [int(p_score < 0) for p_score in p_scores] # assumes negative score means error
-    rv['test_data'] = {'seed': seed}
-    rv['player_data'] = [{} for _ in range(n_players)]
-    for player, key in enumerate([str(i) for i in range(n_players)]):
-        for data in json_log['errors'][key]:
-            if not data: continue
-            for line in [line.strip() for line in data.split('\n')]:
-                vs = line.split(' ')
-                if len(vs) < 4: continue
-                if vs[0] == '[TDATA]':  rv['test_data'][vs[1]] = vs[3]
-                if vs[0] == '[PDATA]':  rv['player_data'][player][vs[1]] = vs[3]
-                if vs[0] == '[PDATA+]': rv['player_data'][player][vs[1]] = rv['player_data'][player].get(vs[1], 0.0) + float(vs[3])            
-    print(json.dumps(rv))
+	p_scores = [int(json_log['results'][0]['scores'][str(i)]) for i in range(n_players)]
+	rv = {}
+	rv['ranks'] = [sum([int(p_score < p2_score) for p2_score in p_scores]) for p_score in p_scores] # assumes higher score is better
+	rv['errors'] = [int(p_score < 0) for p_score in p_scores] # assumes negative score means error
+	rv['test_data'] = {'seed': seed}
+	rv['player_data'] = [{} for _ in range(n_players)]
+	for player, key in enumerate([str(i) for i in range(n_players)]):
+		for data in json_log['results'][0]['errors'][key]:
+			if not data: continue
+			for line in [line.strip() for line in data.split('\n')]:
+				vs = line.split(' ')
+				if len(vs) < 4: continue
+				if vs[0] == '[TDATA]':  rv['test_data'][vs[1]] = vs[3]
+				if vs[0] == '[PDATA]':  rv['player_data'][player][vs[1]] = vs[3]
+				if vs[0] == '[PDATA+]': rv['player_data'][player][vs[1]] = rv['player_data'][player].get(vs[1], 0.0) + float(vs[3])            
+	print(json.dumps(rv))
 ```
 
 In order to add metadata to test_data, just print `[TDATA] key = value` to stderr in your bot. Similarly, print `[PDATA] key = value` for adding metadata to player_data. Use `[PDATA+] key = value` if you want to store the sum of all of the values instead only the last one.
