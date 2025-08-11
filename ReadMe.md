@@ -20,6 +20,7 @@ You can see the latest changes in the [changelog.txt](https://github.com/FakePsy
 
 ## Quick Setup Guide
 - Install `psyleague` (via `pip install psyleague --upgrade`)
+    (Python needs to be added to environment path if it isn't already)
 - Create a play_game script that is invoked every time psyleague wants to run a new game. This is usually either a wrapper on a provided referee or your own game simulator. Please see [this example](#codingame-play_game-script) for explanation about the JSON format.
 - Run `psyleague config` in your contest directory to create a new config file
 - In `psyleague.cfg` you have to modify `cmd_bot_setup` and `cmd_play_game`. `cmd_bot_setup` is executed immediately when you add a new bot. `cmd_play_game` is executed when `psyleague` wants to play a single game. %DIR% -> `dir_bots` (from config), %NAME% -> `BOT_NAME`, %SRC% -> `SOURCE` (or `BOT_NAME` if `SOURCE` was not provided), %P1% & %P2% -> `BOT_NAME` of the player 1 & player 2 bots.
