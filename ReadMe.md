@@ -46,7 +46,11 @@ if __name__ == '__main__':
     os.close(f)
     seed = random.randrange(0, 2**31)
     n_players = len(sys.argv) - 1
-    cmd = 'java -jar referee.jar' + ''.join([f' -p{i} "{sys.argv[i]}"' for i in range(1, n_players+1)]) + f' -d seed={seed} -l "{log_file}"'
+	# compatible with modern games like cell arena
+	# -l specifies the league
+	# -p starts a list of players each in quotes
+	# -s specifies the seed
+	cmd = "java -jar referee.jar -l 4 -p" + ''.join([f' \"{sys.argv[i]}\"' for i in range(1, n_players+1)])  + f" -s {seed} -j \"{log_file}\""
     task = subprocess.run(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     with open(log_file, 'r') as f:
         json_log = json.load(f)
