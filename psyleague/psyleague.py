@@ -389,7 +389,6 @@ def choose_match(bots: Dict[str, Bot]) -> List[str]:
         
     # find first player
     min_bots = [b for b in l_bots if b.games < cfg['mm_min_matches']]
-    selected_bot = None
     if len(min_bots) and random.random() < cfg['mm_min_matches_preference']:
         p1 = random.choice(min_bots)
     else:
@@ -441,11 +440,8 @@ def mode_run() -> None:
     games_total = args.games or sys.maxsize
     games_left = games_total
     games_stat = RollingStat(60.0)
-    last_msg_time = time.time()
-    
+
     try:
-        start_time = time.time()
-        
         def worker_loop() -> None:
             while True:
                 try:
